@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; /* Adjust the size as needed */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.watchlist {
+  /* width: 200px; */
+  border-left: 1px solid #ccc;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.watchlist-light {
+  background-color: #f7fafc;
+  color: #000000; /* text-black */
+}
+
+.watchlist-dark {
+  background-color: #2d3748; /* bg-gray-800 */
+  color: #ffffff; /* text-white */
+}
+
+.watchlist-item {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.watchlist-item-light:hover {
+  background-color: #e2e8f0; 
+}
+
+.watchlist-item-dark:hover {
+  background-color: #4a5568; /* dark:hover:bg-gray-700 */
+}
+
+.active-trader {
+  width: 400px;
+  padding: 1rem;
+}
+
+.active-trader-light {
+  background-color: #f3f4f6; /* bg-gray-100 */
+  color: #000000; /* text-black */
+}
+
+.active-trader-dark {
+  background-color: #2d3748; /* bg-gray-800 */
+  color: #ffffff; /* text-white */
+}
+
+.chart{
+  width: 1060px;
+}
+.buy-button {
+  font-weight: 600;
+  font-size : 15px;
+  background-color: green;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 90px;
+  height: 45px;
+}
+
+.sell-button {
+  font-weight: 600;
+  font-size : 15px; 
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 90px;
+  height: 45px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.space-x-4 > * + * {
+  margin-left: 1rem; /* Adjust spacing as needed */
+}
