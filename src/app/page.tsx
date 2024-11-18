@@ -57,7 +57,7 @@ export default function Home() {
   ) => {
     try {
       const response = await fetch(
-        `https://deployment-sample-ne2ffev2h-ritha24s-projects.vercel.app/api/data/${ticker}/${timeframe}/${emaPeriod}/${vwapPeriod}/${vwapStdDev}`,
+        `https://deployment-sample-mnlraa5lv-ritha24s-projects.vercel.app/api/data/${ticker}/${timeframe}/${emaPeriod}/${vwapPeriod}/${vwapStdDev}`,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -78,7 +78,7 @@ export default function Home() {
   const fetchWatchlist = async () => {
     try {
       const response = await fetch(
-        "https://deployment-sample-ne2ffev2h-ritha24s-projects.vercel.app/api/symbols",
+        "https://deployment-sample-mnlraa5lv-ritha24s-projects.vercel.app/api/symbols",
         {
           headers: {
             "Content-Type": "application/json",
