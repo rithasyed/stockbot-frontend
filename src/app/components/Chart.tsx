@@ -88,7 +88,7 @@ export default function Chart({ theme, data }: ChartProps) {
         color: 'green'
       });
       
-      syncCharts(chartInstance.current, macdChartInstance.current, candlestickSeriesRef.current, macdLineRef.current, macdSignalRef.current, macdHistogramRef.current);
+      syncCharts(chartInstance.current, macdChartInstance.current, candlestickSeriesRef.current, macdLineRef.current);
 
       return () => {
         chartInstance.current?.remove();
