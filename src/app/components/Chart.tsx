@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { TTMWavesChart } from './TtmWaves'; // Adjust the import path as needed
 import { 
   createChart, 
   IChartApi, 
@@ -87,7 +86,7 @@ export default function Chart({ theme, data }: ChartProps) {
       macdHistogramRef.current = macdChartInstance.current.addHistogramSeries({
         color: 'green'
       });
-      
+
       syncCharts(chartInstance.current, macdChartInstance.current, candlestickSeriesRef.current, macdLineRef.current);
 
       return () => {
@@ -182,23 +181,14 @@ export default function Chart({ theme, data }: ChartProps) {
       });
       
       candlestickSeriesRef.current.setMarkers(markers);
-
     }
   }, [data]);
-
-  
   
   return (
     <>
-      <div className="flex flex-col h-full">
-      <div ref={chartRef} className="flex-grow" />
-      <TTMWavesChart 
-        theme={theme} 
-        data={data} 
-        mainChart={chartInstance.current} 
-      />
-      <div ref={macdChartRef} className="h-48" />
-    </div>
+      <div ref={chartRef} className="w-full h-2/3" />
+      <div ref={macdChartRef} className="w-full h-1/3" />
+      {/* <Ripster candleSticks={data?.candlestick} chartInstance={chartInstance.current} /> */}
     </>
   );
 }
@@ -226,7 +216,7 @@ function getChartOptions(theme: 'light' | 'dark'): DeepPartial<ChartOptions> {
     },
     localization: {
       timeFormatter: (time: Time) => {
-        const date = new Date(time * 1000);
+        const date = new Date(Number(time) * 1000);
         return date.toLocaleString('en-US', {
           weekday: 'short',
           year: 'numeric',
@@ -265,7 +255,7 @@ function syncCharts(
   chart: IChartApi,
   macdChart: IChartApi,
   candlestickSeries: ISeriesApi<"Candlestick">,
-  macdLine: ISeriesApi<"Line">,
+  macdLine: ISeriesApi<"Line">
 ) {
   chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
     if (range) {
@@ -279,7 +269,7 @@ function syncCharts(
     }
   });
 
-   function syncCrosshair(
+  function syncCrosshair(
     sourceChart: IChartApi,
     targetChart: IChartApi,
     sourceSeries: ISeriesApi<"Candlestick"> | ISeriesApi<"Line">,
