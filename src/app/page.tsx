@@ -6,8 +6,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/Resizable";
-import WebSocketContainer from "../components/ripsterNotification";
-import PaperTrading from "../components/paperTrade";
 
 const Chart = dynamic(() => import("../components/Chart"), { ssr: false });
 export interface PaperTrade {
