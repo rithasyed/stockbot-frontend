@@ -78,7 +78,7 @@ export default function Home() {
   ) => {
     try {
       const response = await fetch(
-        `http://localhost:5001/api/data/${ticker}/${timeframe}/${emaPeriod}/${vwapPeriod}/${vwapStdDev}`
+        `https://stockbot-backend1-8dc6095d95ef.herokuapp.com/api/data/${ticker}/${timeframe}/${emaPeriod}/${vwapPeriod}/${vwapStdDev}`
       );
       const data = await response.json();
       console.log("Fetched data:", data);
@@ -90,7 +90,7 @@ export default function Home() {
   };
   const fetchWatchlist = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/symbols");
+      const response = await fetch("https://stockbot-backend1-8dc6095d95ef.herokuapp.com/api/symbols");
       const symbols = await response.json();
       console.log("Fetched symbols:", symbols); // Add this line for debugging
       setWatchlist(symbols.map((symbol: string) => ({ symbol })));
