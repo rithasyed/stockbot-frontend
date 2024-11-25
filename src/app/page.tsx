@@ -57,7 +57,7 @@ export default function Home() {
   ) => {
     try {
       const response = await fetch(
-        `https://deployment-sample-eight.vercel.app/api/data/${ticker}/${timeframe}/${emaPeriod}/${vwapPeriod}/${vwapStdDev}`,
+        `https://stockbot-backend1-8dc6095d95ef.herokuapp.com/api/data/${ticker}/${timeframe}/${emaPeriod}/${vwapPeriod}/${vwapStdDev}`,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -78,7 +78,7 @@ export default function Home() {
   const fetchWatchlist = async () => {
     try {
       const response = await fetch(
-        "https://deployment-sample-eight.vercel.app/api/symbols",
+        "https://stockbot-backend1-8dc6095d95ef.herokuapp.com/api/symbols",
         {
           headers: {
             "Content-Type": "application/json",
