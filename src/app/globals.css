@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px; /* Adjust the size as needed */
   margin: 0;
   padding: 0;
@@ -35,7 +35,7 @@ body {
 }
 
 .watchlist-item-light:hover {
-  background-color: #e2e8f0; 
+  background-color: #e2e8f0;
 }
 
 .watchlist-item-dark:hover {
@@ -57,12 +57,12 @@ body {
   color: #ffffff; /* text-white */
 }
 
-.chart{
+.chart {
   width: 1060px;
 }
 .buy-button {
   font-weight: 600;
-  font-size : 15px;
+  font-size: 15px;
   background-color: green;
   color: white;
   border-radius: 5px;
@@ -73,7 +73,7 @@ body {
 
 .sell-button {
   font-weight: 600;
-  font-size : 15px; 
+  font-size: 15px;
   background-color: red;
   color: white;
   border-radius: 5px;
@@ -122,6 +122,9 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+  }
+  .light {
+    --background: 0 0% 100%;
   }
   .dark {
     --background: 240 10% 3.9%;

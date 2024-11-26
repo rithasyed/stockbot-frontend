@@ -10,7 +10,7 @@ import {
   ColorType,
   SeriesMarker,
 } from "lightweight-charts";
-// import Ripster from "../../indicators/ripster";
+import Ripster from "../../indicators/ripster";
 
 interface ChartProps {
   theme: "light" | "dark";
@@ -47,12 +47,12 @@ interface ChartProps {
       yellow_signal_down: boolean;
       signal_red_dot: boolean;
     }[];
-    ttm_waves: { 
-      time: Time; 
-      momentum: number; 
-      ao: number; 
-      squeeze: string; 
-      atr1: number 
+    ttm_waves: {
+      time: Time;
+      momentum: number;
+      ao: number;
+      squeeze: string;
+      atr1: number;
     }[];
   } | null;
 }
@@ -64,7 +64,7 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
   const chartInstance = useRef<IChartApi | null>(null);
   const macdChartInstance = useRef<IChartApi | null>(null);
   const ttmWavesChartInstance = useRef<IChartApi | null>(null);
-  
+
   const candlestickSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const momentumSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
   const aoSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
@@ -120,29 +120,30 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
       // });
 
       atr1SeriesRef.current = ttmWavesChartInstance.current.addLineSeries({
-        color: 'rgba(255, 0, 0, 0.8)',
+        color: "rgba(255, 0, 0, 0.8)",
         lineWidth: 1,
-        priceScaleId: 'right',
+        priceScaleId: "right",
       });
 
-      momentumSeriesRef.current = ttmWavesChartInstance.current.addHistogramSeries({
-        color: '#2962FF',
-        priceFormat: { type: 'volume' },
-        priceScaleId: 'right',
-      });
+      momentumSeriesRef.current =
+        ttmWavesChartInstance.current.addHistogramSeries({
+          color: "#2962FF",
+          priceFormat: { type: "volume" },
+          priceScaleId: "right",
+        });
 
       squeezeSeriesRef.current = ttmWavesChartInstance.current.addLineSeries({
-        priceScaleId: 'right',
+        priceScaleId: "right",
         lastValueVisible: false,
         priceLineVisible: false,
         crosshairMarkerVisible: false,
-        color: 'rgba(0, 0, 0, 0)',
+        color: "rgba(0, 0, 0, 0)",
       });
 
       aoSeriesRef.current = ttmWavesChartInstance.current.addHistogramSeries({
-        color: '#26A69A',
-        priceFormat: { type: 'volume' },
-        priceScaleId: 'right',
+        color: "#26A69A",
+        priceFormat: { type: "volume" },
+        priceScaleId: "right",
       });
 
       signalMarkersRef.current = chartInstance.current.addLineSeries({
@@ -220,22 +221,35 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
         //     bottomValue: item.lower,
         //   }))
         // );
-        atr1SeriesRef.current.setData(data.ttm_waves.map(item => ({
-          time: item.time,
-          value: item.atr1
-        })));
+        atr1SeriesRef.current.setData(
+          data.ttm_waves.map((item) => ({
+            time: item.time,
+            value: item.atr1,
+          }))
+        );
 
-        momentumSeriesRef.current.setData(data.ttm_waves.map(item => ({
-          time: item.time,
-          value: item.momentum,
-          color: item.momentum >= 0 
-            ? (item.momentum > (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.momentum || 0) ? '#00bcd4' : '#2962ff') 
-            : (item.momentum > (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.momentum || 0) ? '#ffeb3b' : '#ff5252'),
-        })));
+        momentumSeriesRef.current.setData(
+          data.ttm_waves.map((item) => ({
+            time: item.time,
+            value: item.momentum,
+            color:
+              item.momentum >= 0
+                ? item.momentum >
+                  (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.momentum ||
+                    0)
+                  ? "#00bcd4"
+                  : "#2962ff"
+                : item.momentum >
+                  (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.momentum ||
+                    0)
+                ? "#ffeb3b"
+                : "#ff5252",
+          }))
+        );
 
-        const squeezeData = data.ttm_waves.map(item => ({
+        const squeezeData = data.ttm_waves.map((item) => ({
           time: item.time,
-          value: 0, 
+          value: 0,
         }));
 
         const squeezeMarkers = data.ttm_waves.flatMap((item) => {
@@ -257,13 +271,22 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
         squeezeSeriesRef.current.setData(squeezeData);
         squeezeSeriesRef.current.setMarkers(squeezeMarkers);
 
-        aoSeriesRef.current.setData(data.ttm_waves.map(item => ({
-          time: item.time,
-          value: item.ao,
-          color: item.ao >= 0 
-            ? (item.ao > (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.ao || 0) ? '#26A69A' : '#B2DFDB') 
-            : (item.ao > (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.ao || 0) ? '#FFCDD2' : '#EF5350'),
-        })));
+        aoSeriesRef.current.setData(
+          data.ttm_waves.map((item) => ({
+            time: item.time,
+            value: item.ao,
+            color:
+              item.ao >= 0
+                ? item.ao >
+                  (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.ao || 0)
+                  ? "#26A69A"
+                  : "#B2DFDB"
+                : item.ao >
+                  (data.ttm_waves[data.ttm_waves.indexOf(item) - 1]?.ao || 0)
+                ? "#FFCDD2"
+                : "#EF5350",
+          }))
+        );
 
         macdLineRef.current.setData(
           data.macd.map((item) => ({ time: item.time, value: item.macd }))
@@ -295,8 +318,8 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
           })
         );
 
-         let markers: SeriesMarker<Time>[] = [];
-        
+        let markers: SeriesMarker<Time>[] = [];
+
         if (markerType === "ttm") {
           // TTM Squeeze markers
           markers = data.ttm_squeeze_signals.flatMap((signal) => {
@@ -346,7 +369,7 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
             //     size: 1,
             //   });
             // }
-            
+
             if (signal.yellow_signal_up) {
               markers.push({
                 time: signal.time,
@@ -446,7 +469,7 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
             return markers;
           });
         }
-        
+
         candlestickSeriesRef.current.setMarkers(markers);
       }
     } catch (e) {
@@ -533,31 +556,30 @@ function getTTMWavesOptions(theme: string): DeepPartial<ChartOptions> {
     layout: {
       background: {
         type: ColorType.Solid,
-        color: theme === 'light' ? 'white' : 'black'
+        color: theme === "light" ? "white" : "black",
       },
-      textColor: theme === 'light' ? 'black' : 'white',
+      textColor: theme === "light" ? "black" : "white",
     },
     grid: {
-      vertLines: { color: theme === 'light' ? '#e1e1e1' : '#363c4e' },
-      horzLines: { color: theme === 'light' ? '#e1e1e1' : '#363c4e' },
+      vertLines: { color: theme === "light" ? "#e1e1e1" : "#363c4e" },
+      horzLines: { color: theme === "light" ? "#e1e1e1" : "#363c4e" },
     },
     crosshair: {
       mode: CrosshairMode.Normal,
     },
     rightPriceScale: {
       visible: true,
-      borderColor: 'rgba(197, 203, 206, 0.8)',
+      borderColor: "rgba(197, 203, 206, 0.8)",
     },
     leftPriceScale: {
       visible: false,
     },
     timeScale: {
       visible: false,
-      borderColor: 'rgba(197, 203, 206, 0.8)',
+      borderColor: "rgba(197, 203, 206, 0.8)",
     },
   };
 }
-
 
 function syncCharts(
   chart: IChartApi,
