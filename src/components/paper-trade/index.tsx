@@ -41,7 +41,7 @@ const PaperTrading: React.FC<{ trades: PaperTrade[] }> = ({ trades }) => {
   }
 
   const renderTradeTable = (trades: PaperTrade[], title: string, pnl: number) => (
-    <Card className="w-full">
+    <Card className="w-full ">
       <CardHeader className="py-2">
         <CardTitle className="text-lg flex justify-between items-center">
           <span>{title}</span>

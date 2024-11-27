@@ -1,11 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/Resizable";
 import NotificationContainer from "../components/ripster-notification";
 import PaperTrading from "../components/paper-trade";
 import BackTesting from "@/components/back-testing";
@@ -13,6 +8,7 @@ import Header, { TickerData } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { PaperTrade } from "@/components/paper-trade/types";
+import { Loader } from "@/components/ui";
 import Chart from "../components/Chart";
 
 export interface WatchlistItem {
@@ -28,6 +24,7 @@ export default function Home() {
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [markerType, setMarkerType] = useState<"vwap" | "ttm">("vwap");
+  const [loading, setLoading] = useState<boolean>(false);
   const openScreen = (screen: string) => setActiveScreen(screen);
 
   useEffect(() => {
@@ -43,6 +40,7 @@ export default function Home() {
   }, []);
 
   const onSubmit = async (technicalData: TickerData) => {
+    setLoading(true);
     try {
       const response = await fetch(`api/candlesticks`, {
         method: "POST",
@@ -54,6 +52,7 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setLoading(false);
   };
   const toggleMarkerType = () => {
     setMarkerType(markerType === "vwap" ? "ttm" : "vwap");
@@ -247,6 +246,7 @@ export default function Home() {
         theme === "light" ? "bg-[#e0e3eb] text-black" : "bg-black text-white"
       }`}
     >
+      {loading && <Loader />}
       <div className="pb-2">
         <Header
           symbols={watchlist}
@@ -290,6 +290,8 @@ export default function Home() {
           </main>
         </div>
       </div>
+      <NotificationContainer onNewTrade={handleNewTrade} />
+
     </div>
   );
 }

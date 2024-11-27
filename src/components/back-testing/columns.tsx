@@ -4,11 +4,29 @@ import { ColumnDef } from "@tanstack/react-table";
 import { PaperTrade } from "./types";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { Button } from "../ui/button";
+import { ArrowUpDown } from "lucide-react";
 
 export const columns: ColumnDef<PaperTrade>[] = [
   {
     accessorKey: "stockname",
-    header: "Stock",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0 hover:bg-transparent"
+        >
+          Stock
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    enableSorting: true,
+    enableHiding: true,
+    cell: ({ row }) => {
+      return <div className="capitalize text-center">{row.original.stockname}</div>;
+    }
   },
   {
     accessorKey: "entry_price",

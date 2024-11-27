@@ -9,6 +9,7 @@ import {
   ChartOptions,
   ColorType,
   SeriesMarker,
+  SeriesMarkerShape,
 } from "lightweight-charts";
 import Ripster from "../../indicators/ripster";
 
@@ -252,21 +253,20 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
           value: 0,
         }));
 
-        const squeezeMarkers = data.ttm_waves.flatMap((item) => {
-          const markers: SeriesMarker<Time>[] = [];
-          if (item.squeeze === 'high' || item.squeeze === 'mid' || item.squeeze === 'low') {
-            markers.push({
-              time: item.time,
-              position: 'inBar',
-              color: item.squeeze === 'high' ? '#ff9800' : 
-                     item.squeeze === 'mid' ? '#ff5252' : 
-                     item.squeeze === 'low' ? '#363a45' : '#4caf50',
-              shape: 'circle',
-              size: 1,
-            });
-          }
-          return markers;
-        });
+        const squeezeMarkers: SeriesMarker<Time>[] = data.ttm_waves.map((item) => ({
+          time: item.time,
+          position: "inBar",
+          color:
+            item.squeeze === "high"
+              ? "#ff9800"
+              : item.squeeze === "mid"
+              ? "#ff5252"
+              : item.squeeze === "low"
+              ? "#363a45"
+              : "#4caf50",
+          shape: "circle",
+          size: 0.5,
+        }));
 
         squeezeSeriesRef.current.setData(squeezeData);
         squeezeSeriesRef.current.setMarkers(squeezeMarkers);
@@ -475,17 +475,18 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
     } catch (e) {
       console.log(e);
     }
-  }, [data, markerType]);
+  }, [data, markerType, theme]);
 
   return (
     <div className="flex flex-col h-full ">
       <div ref={chartRef} className=" flex-grow" />
       <div ref={ttmWavesChartRef} className="h-48" />
       <div ref={macdChartRef} className=" h-48" />
-      {/* <Ripster
+      <Ripster
         candleSticks={data?.candlestick}
         chartInstance={chartInstance.current}
-      /> */}
+        theme={theme}
+      />
     </div>
   );
 }

@@ -107,7 +107,7 @@ const BackTesting: React.FC<BackTestingProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="p-2">
-        <div className="max-h-[23rem] overflow-auto scrollbar-hide">
+        <div className="max-h-[24rem] overflow-auto scrollbar-hide">
           <DataTable columns={columns} data={trades} />
         </div>
       </CardContent>
@@ -117,14 +117,14 @@ const BackTesting: React.FC<BackTestingProps> = ({
     <div className="paper-trading px-2">
       {loading && <Loader />}
       <h3 className="font-bold text-xl mb-2 text-center py-2">Back Testing</h3>
-      <div className="flex flex-row items-center justify-around py-2 ">
+      <div className="flex flex-row items-center justify-around py-3 ">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className={`w-32 justify-between border-none  `}
+              className={`w-32 justify-between border-1  `}
             >
               {backTest.ticker
                 ? symbols.find((s) => s.name === backTest.ticker)?.name
@@ -171,7 +171,7 @@ const BackTesting: React.FC<BackTestingProps> = ({
             setBackTest((prev) => ({ ...prev, timeframe: value }));
           }}
         >
-          <SelectTrigger className="w-16 border-none focus:ring-0 focus:ring-offset-0">
+          <SelectTrigger className="w-16 border-1 focus:ring-0 focus:ring-offset-0">
             <SelectValue placeholder="Time" defaultValue={backTest.timeframe} />
           </SelectTrigger>
           <SelectContent>
