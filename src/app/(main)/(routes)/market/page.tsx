@@ -1,15 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import NotificationContainer from "../components/ripster-notification";
-import PaperTrading from "../components/paper-trade";
+import NotificationContainer from "@/components/ripster-notification";
+import PaperTrading from "@/components/paper-trade";
 import BackTesting from "@/components/back-testing";
 import Header, { TickerData } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { PaperTrade } from "@/components/paper-trade/types";
 import { Loader } from "@/components/ui";
-import Chart from "../components/Chart";
+const Chart = dynamic(() => import("@/components/chart"), { ssr: false });
 
 export interface WatchlistItem {
   id: number;

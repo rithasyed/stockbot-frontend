@@ -1,5 +1,5 @@
 "use client";
-
+import { UserButton} from "@clerk/nextjs";
 import { FormEvent, useEffect, useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -115,7 +115,6 @@ export default function Header({
     // e.preventDefault();
     await onSubmit(technicalData);
   };
-
 
   return (
     <header
@@ -325,6 +324,12 @@ export default function Header({
               className="ml-5 text-sm text-gray-300 hover:text-white"
             />
           )} */}
+          <div className="flex items-center align-middle gap-1">
+            {/* {userId && <ThemeToggle userId={userId} />} */}
+            <div className="mr-4">
+              <UserButton signInUrl="/signin"/>
+            </div>
+          </div>
         </div>
       </div>
     </header>

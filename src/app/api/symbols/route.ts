@@ -4,7 +4,6 @@ export async function GET() {
   try {
     const response = await fetch(`${process.env.BACKEND_URL}/symbols`);
     const symbols = await response.json();
-    console.log("response", response);
     return new NextResponse(JSON.stringify(symbols), { status: 200 });
   } catch (e) {
     console.log("[CODE_ERROR]", e);

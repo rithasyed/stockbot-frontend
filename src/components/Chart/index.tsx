@@ -475,7 +475,7 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
     } catch (e) {
       console.log(e);
     }
-  }, [data, markerType, theme]);
+  }, [data, markerType, theme]); 
 
   return (
     <div className="flex flex-col h-full ">
