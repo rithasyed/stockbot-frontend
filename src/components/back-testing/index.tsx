@@ -23,11 +23,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { WatchlistItem } from "@/app/page";
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Loader } from "../ui";
+import { WatchlistItem } from "@/app/(main)/(routes)/market/page";
 
 interface BackTest {
   ticker: string;
