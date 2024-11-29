@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState, useCallback } from "react";
 import SnackbarContainer from "../snackBar"; // Adjust based on your folder structure
 

@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { PaperTrade } from "./types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,8 +28,11 @@ import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Loader } from "../ui";
-import { WatchlistItem } from "@/app/(main)/(routes)/market/page";
 
+export interface WatchlistItem {
+  id: number;
+  name: string;
+}
 interface BackTest {
   ticker: string;
   timeframe: string;

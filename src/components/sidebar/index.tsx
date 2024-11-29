@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { ChartNoAxesCombined, ChartGantt } from "lucide-react";
 

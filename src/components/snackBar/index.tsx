@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
 interface SnackbarProps {
@@ -52,7 +53,9 @@ const SnackbarContainer: React.FC<SnackbarContainerProps> = ({
     if (messages.length > visibleMessages.length) {
       setVisibleMessages((prev) => [...prev, ...messages.slice(prev.length)]);
       // Play sound when new message is added
-      audioRef.current?.play().catch(e => console.error("Error playing sound:", e));
+      audioRef.current
+        ?.play()
+        .catch((e) => console.error("Error playing sound:", e));
     }
   }, [messages, visibleMessages]);
 
