@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { BarChart3, Bot, TrendingUp, DollarSign } from "lucide-react";
 // import { BACKTEST } from "/images/back-testing.png";
 
-export function smoothScroll(
+function smoothScroll(
   e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
 ) {
   e.preventDefault();
