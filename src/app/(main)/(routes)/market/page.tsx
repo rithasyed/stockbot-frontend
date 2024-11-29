@@ -9,7 +9,7 @@ import { Sidebar } from "@/components/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { PaperTrade } from "@/components/paper-trade/types";
 import { Loader } from "@/components/ui";
-const Chart = dynamic(() => import("@/components/chart"), { ssr: false });
+import Chart from "@/components/Chart";
 
 export interface WatchlistItem {
   id: number;
