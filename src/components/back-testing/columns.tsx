@@ -1,13 +1,13 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { PaperTrade } from "./types";
+import { Trade } from "@/types/trades";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
 import { ArrowUpDown } from "lucide-react";
 
-export const columns: ColumnDef<PaperTrade>[] = [
+export const columns: ColumnDef<Trade>[] = [
   {
     accessorKey: "stockname",
     header: ({ column }) => {
@@ -125,7 +125,29 @@ export const columns: ColumnDef<PaperTrade>[] = [
     },
   },
   {
+    accessorKey: "profit",
+    header: "profit",
+    cell: ({ row }) => {
+      const value: string | null = row.getValue("profit");
+      const formatted = value !== null ? value : "--";
+      return (
+        <span className={value?.startsWith("-") ? "text-red-500" : "text-green-500"}>
+          {formatted}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "indicator",
+    header: "Indicator",
+  },
+  {
     accessorKey: "interval",
     header: "Interval",
   },
+  {
+    accessorKey: "remarks",
+    header: "Remarks",
+    enableHiding: true,
+  }
 ];

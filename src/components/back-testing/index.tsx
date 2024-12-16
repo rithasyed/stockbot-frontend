@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { PaperTrade } from "./types";
+import { Trade } from "@/types/trades";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "../ui/data-table";
 import { columns } from "./columns";
@@ -24,58 +24,71 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown} from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Loader } from "../ui";
+import { Input } from "../ui/input";
+import { useTrades } from "@/store/tradeStore";
+import { useSymbols } from "@/store/symbolStore";
 
-export interface WatchlistItem {
-  id: number;
-  name: string;
+interface BackTestingProps {
+  isBigScreen?: boolean;
 }
 interface BackTest {
   ticker: string;
   timeframe: string;
-}
-interface BackTestingProps {
-  trades: PaperTrade[];
-  symbols: WatchlistItem[];
-  fetchTrades: () => void;
+  quantity: number;
+  indicator: string;
 }
 const timePeriods = ["1m", "5m", "15m", "60m", "1d", "1wk", "1mo"];
 
-const BackTesting: React.FC<BackTestingProps> = ({
-  trades,
-  fetchTrades,
-  symbols,
-}) => {
-  const [backTestingTrades, setBackTestingTrades] = useState<PaperTrade[]>([]);
+const BackTesting: React.FC<BackTestingProps> = ({ isBigScreen = false }) => {
+  const { data: trades, execute } = useTrades((state) => state);
+  const symbols = useSymbols((state) => state.data);
+  const [backTestingTrades, setBackTestingTrades] = useState<Trade[]>([]);
   const [pnl, setPNL] = useState<number>(0);
+  const [pnlPercent, setPNLPercent] = useState<string>("0.00");
   const [backTest, setBackTest] = useState<BackTest>({
     ticker: "AAPL",
     timeframe: "1m",
+    quantity: 100,
+    indicator: "TTM",
   });
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     processTrade(trades);
   }, [trades]);
-  const calculateTotalPnl = (trades: PaperTrade[]): number => {
+  const calculateTotalPnl = (trades: Trade[]): number => {
     return trades.reduce((total, trade) => {
-      if (trade.pnl !== "--") {
-        return total + parseFloat(trade.pnl);
+      if (trade.ROI !== "--" && trade.ROI !== null) {
+        return total + parseFloat(trade.ROI);
       }
       return total;
     }, 0);
   };
+  const calculatePNLPercentage = (trades: Trade[], pnl: number): string => {
+    const totalCapital = trades.reduce((total: number, trade) => {
+      if (trade.capital !== "--" && trade.capital !== null) {
+        return total + parseFloat(trade.capital);
+      }
+      return total;
+    }, 0);
+    const percentagePNL = (pnl / totalCapital) * 100;
+    return percentagePNL.toFixed(2);
+  };
 
-  const processTrade = (trade: PaperTrade[]) => {
+  const processTrade = (trade: Trade[]) => {
     if (!trade) {
       return;
     }
     const filteredTrades = trade.filter((trade) => trade.back_testing);
     setBackTestingTrades(filteredTrades);
-    setPNL(calculateTotalPnl(filteredTrades));
+    const pnl = calculateTotalPnl(filteredTrades);
+    setPNL(pnl);
+    const percentagePNL = calculatePNLPercentage(filteredTrades, pnl);
+    setPNLPercent(percentagePNL);
   };
   const handleSubmit = async () => {
     setLoading(true);
@@ -85,18 +98,14 @@ const BackTesting: React.FC<BackTestingProps> = ({
         body: JSON.stringify(backTest),
       });
       const result = await response.json();
-      fetchTrades();
-      console.log("back testing result:", result); // Add this line for debugging
+      execute();
+      console.log("back testing result:", result); 
     } catch (error) {
       console.error("Error while back testing:", error);
     }
     setLoading(false);
   };
-  const renderTradeTable = (
-    trades: PaperTrade[],
-    title: string,
-    pnl: number
-  ) => (
+  const renderTradeTable = (trades: Trade[], title: string, pnl: number) => (
     <Card className="w-full">
       <CardHeader className="py-2">
         <CardTitle className="text-lg flex justify-between items-center">
@@ -106,7 +115,7 @@ const BackTesting: React.FC<BackTestingProps> = ({
               pnl >= 0 ? "text-green-500" : "text-red-500"
             }`}
           >
-            P&L: ${pnl.toFixed(2)}
+            P&L: ${pnl.toFixed(2)} {isBigScreen && `(${pnlPercent}%)`}
           </span>
         </CardTitle>
       </CardHeader>
@@ -184,6 +193,31 @@ const BackTesting: React.FC<BackTestingProps> = ({
                 {period}
               </SelectItem>
             ))}
+          </SelectContent>
+        </Select>
+        <Input
+          className="w-16 border-1 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          type="number"
+          value={backTest.quantity}
+          onChange={(e) => {
+            setBackTest((prev) => ({
+              ...prev,
+              quantity: Number(e.target.value),
+            }));
+          }}
+        />
+        <Select
+          value={backTest.indicator}
+          onValueChange={(value) => {
+            setBackTest((prev) => ({ ...prev, indicator: value }));
+          }}
+        >
+          <SelectTrigger className="w-24 border-1 focus:ring-0 focus:ring-offset-0">
+            <SelectValue placeholder="Indicator" defaultValue={backTest.indicator} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="TTM">TTM</SelectItem>
+            <SelectItem value="Ripster">Ripster</SelectItem>
           </SelectContent>
         </Select>
         <Button onClick={handleSubmit}>Test</Button>

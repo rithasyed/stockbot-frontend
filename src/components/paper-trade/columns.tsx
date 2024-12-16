@@ -1,13 +1,13 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { PaperTrade } from "./types";
+import { Trade } from "@/types/trades";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 
-export const columns: ColumnDef<PaperTrade>[] = [
+export const columns: ColumnDef<Trade>[] = [
   {
     accessorKey: "stockname",
     header: ({ column }) => {
@@ -132,4 +132,8 @@ export const columns: ColumnDef<PaperTrade>[] = [
     accessorKey: "interval",
     header: "Interval",
   },
+  {
+    accessorKey: "remarks",
+    header: "Remarks",
+  }
 ];

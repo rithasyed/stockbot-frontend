@@ -1,4 +1,4 @@
-export interface PaperTrade {
+export interface Trade {
   id: number;
   stockname: string;
   entry_price: string;
@@ -12,8 +12,19 @@ export interface PaperTrade {
   quantity: string;
   capital: string;
   ROI: string;
+  profit: string;
   tradetype: string;
+  indicator: string;
   back_testing: boolean;
   interval: string;
   remarks: string;
 }
+
+export type TradeStore = {
+  loading: boolean;
+  success: boolean;
+  error: boolean;
+  data: Trade[];
+  errorData: null;
+  execute: () => void;
+};

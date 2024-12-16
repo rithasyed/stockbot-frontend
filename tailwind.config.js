@@ -84,6 +84,15 @@ module.exports = {
           overflow: "hidden",
           "text-overflow": "ellipsis",
         },
+        ".without-ring": {
+          "@apply focus:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0":
+            {},
+          "&:focus, &:focus-visible": {
+            boxShadow: "none !important",
+            outline: "none !important",
+            // border: "none !important",
+          },
+        },
         ".word-break-break-word": {
           wordBreak: "break-word",
         },

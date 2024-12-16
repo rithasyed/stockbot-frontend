@@ -1,50 +1,64 @@
-"use client"
-import React, { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DataTable } from "@/components/ui/data-table"
-import { columns } from "./columns"
-import { PaperTrade } from "./types"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+"use client";
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DataTable } from "@/components/ui/data-table";
+import { columns } from "./columns";
+import { Trade } from "@/types/trades";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTrades } from "@/store/tradeStore";
 
-const PaperTrading: React.FC<{ trades: PaperTrade[] }> = ({ trades }) => {
-  const [shortTrades, setShortTrades] = useState<PaperTrade[]>([])
-  const [longTrades, setLongTrades] = useState<PaperTrade[]>([])
-  const [longPNL, setLongPNL] = useState<number>(0)
-  const [shortPNL, setShortPNL] = useState<number>(0)
+const PaperTrading: React.FC = () => {
+  const trades = useTrades((state) => state.data);
+  const [shortTrades, setShortTrades] = useState<Trade[]>([]);
+  const [longTrades, setLongTrades] = useState<Trade[]>([]);
+  const [longPNL, setLongPNL] = useState<number>(0);
+  const [shortPNL, setShortPNL] = useState<number>(0);
 
   useEffect(() => {
-    processTrade(trades)
-  }, [trades])
+    processTrade(trades);
+  }, [trades]);
 
-  const calculateTotalPnl = (trades: PaperTrade[]): number => {
+  const calculateTotalPnl = (trades: Trade[]): number => {
     return trades.reduce((total, trade) => {
       if (trade.pnl !== "--") {
-        return total + parseFloat(trade.pnl)
+        return total + parseFloat(trade.pnl);
       }
-      return total
-    }, 0)
-  }
+      return total;
+    }, 0);
+  };
 
-  const processTrade = (trade: PaperTrade[]) => {
+  const processTrade = (trade: Trade[]) => {
     if (!trade) {
-      return
+      return;
     }
-    const filteredTrades = trade.filter((trade) => !trade.back_testing)
-    const shortTrades = filteredTrades.filter((trade) => trade.tradetype === "short")
-    const longTrades = filteredTrades.filter((trade) => trade.tradetype === "long")
+    const filteredTrades = trade.filter((trade) => !trade.back_testing);
+    const shortTrades = filteredTrades.filter(
+      (trade) => trade.tradetype === "short"
+    );
+    const longTrades = filteredTrades.filter(
+      (trade) => trade.tradetype === "long"
+    );
 
-    setShortTrades(shortTrades)
-    setLongTrades(longTrades)
-    setLongPNL(calculateTotalPnl(longTrades))
-    setShortPNL(calculateTotalPnl(shortTrades))
-  }
+    setShortTrades(shortTrades);
+    setLongTrades(longTrades);
+    setLongPNL(calculateTotalPnl(longTrades));
+    setShortPNL(calculateTotalPnl(shortTrades));
+  };
 
-  const renderTradeTable = (trades: PaperTrade[], title: string, pnl: number) => (
+  const renderTradeTable = (
+    trades: Trade[],
+    title: string,
+    pnl: number
+  ) => (
     <Card className="w-full ">
       <CardHeader className="py-2">
         <CardTitle className="text-lg flex justify-between items-center">
           <span>{title}</span>
-          <span className={`text-sm ${pnl >= 0 ? "text-green-500" : "text-red-500"}`}>
+          <span
+            className={`text-sm ${
+              pnl >= 0 ? "text-green-500" : "text-red-500"
+            }`}
+          >
             P&L: ${pnl.toFixed(2)}
           </span>
         </CardTitle>
@@ -55,7 +69,7 @@ const PaperTrading: React.FC<{ trades: PaperTrade[] }> = ({ trades }) => {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 
   return (
     <div className="paper-trading px-2">
@@ -73,8 +87,7 @@ const PaperTrading: React.FC<{ trades: PaperTrade[] }> = ({ trades }) => {
         </TabsContent>
       </Tabs>
     </div>
-  )
-}
+  );
+};
 
-export default PaperTrading
-
+export default PaperTrading;

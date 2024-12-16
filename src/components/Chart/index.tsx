@@ -13,10 +13,9 @@ import {
   SeriesMarkerShape,
 } from "lightweight-charts";
 import Ripster from "../../indicators/ripster";
+import { useGeneralSetting } from "@/store/generalSettingStore";
 
 interface ChartProps {
-  theme: "light" | "dark";
-  markerType: "vwap" | "ttm";
   data: {
     candlestick: {
       time: Time;
@@ -48,6 +47,8 @@ interface ChartProps {
       yellow_signal_up: boolean;
       yellow_signal_down: boolean;
       signal_red_dot: boolean;
+      rsi_exit_up: boolean;
+      rsi_exit_down: boolean;
     }[];
     ttm_waves: {
       time: Time;
@@ -59,7 +60,8 @@ interface ChartProps {
   } | null;
 }
 
-export default function Chart({ theme, data, markerType }: ChartProps) {
+export default function Chart({ data }: ChartProps) {
+  const { TTM, theme } = useGeneralSetting((state) => state);
   const chartRef = useRef<HTMLDivElement>(null);
   const macdChartRef = useRef<HTMLDivElement>(null);
   const ttmWavesChartRef = useRef<HTMLDivElement>(null);
@@ -254,20 +256,22 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
           value: 0,
         }));
 
-        const squeezeMarkers: SeriesMarker<Time>[] = data.ttm_waves.map((item) => ({
-          time: item.time,
-          position: "inBar",
-          color:
-            item.squeeze === "high"
-              ? "#ff9800"
-              : item.squeeze === "mid"
-              ? "#ff5252"
-              : item.squeeze === "low"
-              ? "#363a45"
-              : "#4caf50",
-          shape: "circle",
-          size: 0.5,
-        }));
+        const squeezeMarkers: SeriesMarker<Time>[] = data.ttm_waves.map(
+          (item) => ({
+            time: item.time,
+            position: "inBar",
+            color:
+              item.squeeze === "high"
+                ? "#ff9800"
+                : item.squeeze === "mid"
+                ? "#ff5252"
+                : item.squeeze === "low"
+                ? "#363a45"
+                : "#4caf50",
+            shape: "circle",
+            size: 0.5,
+          })
+        );
 
         squeezeSeriesRef.current.setData(squeezeData);
         squeezeSeriesRef.current.setMarkers(squeezeMarkers);
@@ -321,7 +325,7 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
 
         let markers: SeriesMarker<Time>[] = [];
 
-        if (markerType === "ttm") {
+        if (TTM) {
           // TTM Squeeze markers
           markers = data.ttm_squeeze_signals.flatMap((signal) => {
             const markers: SeriesMarker<Time>[] = [];
@@ -374,18 +378,36 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
             if (signal.yellow_signal_up) {
               markers.push({
                 time: signal.time,
-                position: "aboveBar",
+                position: "belowBar",
                 color: "yellow",
-                shape: "arrowDown",
+                shape: "arrowUp",
                 size: 2,
               });
             }
             if (signal.yellow_signal_down) {
               markers.push({
                 time: signal.time,
-                position: "belowBar",
+                position: "aboveBar",
                 color: "yellow",
+                shape: "arrowDown",
+                size: 2,
+              });
+            }
+            if (signal.rsi_exit_up) {
+              markers.push({
+                time: signal.time,
+                position: "belowBar",
+                color: "red",
                 shape: "arrowUp",
+                size: 2,
+              });
+            }
+            if (signal.rsi_exit_down) {
+              markers.push({
+                time: signal.time,
+                position: "aboveBar",
+                color: "red",
+                shape: "arrowDown",
                 size: 2,
               });
             }
@@ -476,7 +498,7 @@ export default function Chart({ theme, data, markerType }: ChartProps) {
     } catch (e) {
       console.log(e);
     }
-  }, [data, markerType, theme]); 
+  }, [data, TTM, theme]);
 
   return (
     <div className="flex flex-col h-full ">
