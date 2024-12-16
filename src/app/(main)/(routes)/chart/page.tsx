@@ -12,7 +12,7 @@ import { useTrades } from "@/store/tradeStore";
 import { useGeneralSetting } from "@/store/generalSettingStore";
 import TickerScores from "@/components/ticker-scores";
 import { IndexScore } from "@/components/ticker-scores/types";
-const Chart = dynamic(() => import("@/components/chart"), { ssr: false });
+const Chart = dynamic(() => import("@/components/Chart"), { ssr: false });
 export interface WatchlistItem {
   id: number;
   name: string;
