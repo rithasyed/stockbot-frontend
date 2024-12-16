@@ -5,18 +5,16 @@ import { Input } from "@/components/ui/input";
 import { BarChart3, Bot, TrendingUp, DollarSign } from "lucide-react";
 // import { BACKTEST } from "/images/back-testing.png";
 
-export function smoothScroll(
-  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-) {
-  e.preventDefault();
-  const href = e.currentTarget.href;
-  const targetId = href.replace(/.*\#/, "");
-  const elem = document.getElementById(targetId);
-  elem?.scrollIntoView({
-    behavior: "smooth",
-  });
-}
 export default function StockBotLanding() {
+  function smoothScroll(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    const targetId = href.replace(/.*\#/, "");
+    const elem = document.getElementById(targetId);
+    elem?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center">
@@ -50,11 +48,20 @@ export default function StockBotLanding() {
             <Link href="/sign-in">Login</Link>
           </Button>
           <Button size="sm">
-            <Link href={"/sign-up"}>Sign Up</Link></Button>
+            <Link href={"/sign-up"}>Sign Up</Link>
+          </Button>
         </nav>
       </header>
       <main className="flex-1 items-center justify-center">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48" style={{backgroundImage: "url('/images/trade.png')", backgroundSize: "cover", backgroundPosition: "top", opacity: "0.8"}}>
+        <section
+          className="w-full py-12 md:py-24 lg:py-32 xl:py-48"
+          style={{
+            backgroundImage: "url('/images/trade.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "top",
+            opacity: "0.8",
+          }}
+        >
           <div className=" px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
