@@ -14,6 +14,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Table,
   TableBody,
   TableCell,
@@ -26,25 +33,34 @@ import { IndexScore } from "./types"
 interface DataTableProps {
   columns: ColumnDef<IndexScore, unknown>[];
   data: IndexScore[];
-  filterColumn?: string;
 }
 
 export function MultiTableDataManager() {
-
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [longRankFilter, setLongRankFilter] = React.useState<string>("all");
+  const [shortRankFilter, setShortRankFilter] = React.useState<string>("all");
+
+  const rankOptions = ["all", "A++", "A+", "A", "B", "C", "D", "F"];
 
   const DataTable = React.useCallback(({ 
     columns, 
-    data, 
-    filterColumn = "TICKER SYMBOL" 
+    data 
   }: DataTableProps) => {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [rowSelection, setRowSelection] = React.useState({});
 
+    const filteredData = React.useMemo(() => {
+      return data.filter(row => {
+        const longRankMatch = longRankFilter === "all" || row.long_rank === longRankFilter;
+        const shortRankMatch = shortRankFilter === "all" || row.short_rank === shortRankFilter;
+        return longRankMatch && shortRankMatch;
+      });
+    }, [data, longRankFilter, shortRankFilter]);
+
     const table = useReactTable({
-      data,
+      data: filteredData,
       columns,
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,
@@ -55,11 +71,31 @@ export function MultiTableDataManager() {
       onRowSelectionChange: setRowSelection,
       state: {
         sorting,
-        columnFilters: globalFilter 
-          ? [{ id: filterColumn, value: globalFilter }] 
-          : columnFilters,
+        columnFilters,
         columnVisibility,
         rowSelection,
+        globalFilter,
+      },
+      globalFilterFn: (row, _, filterValue) => {
+        if (!filterValue) return true;
+
+        const searchValue = filterValue.toLowerCase();
+        const columnsToSearch = [
+          'ticker_name', 
+          'ticker_symbol', 
+          'long_rank', 
+          'short_rank', 
+          'trend', 
+          'long_score', 
+          'short_score',
+          'score_change_trend'
+        ];
+
+        return columnsToSearch.some(column => {
+          const value = row.original[column as keyof IndexScore];
+          const stringValue = String(value).toLowerCase();
+          return stringValue.includes(searchValue);
+        });
       },
     });
 
@@ -113,27 +149,54 @@ export function MultiTableDataManager() {
         </Table>
       </div>
     );
-  }, [globalFilter, columnVisibility]);
+  }, [globalFilter, columnVisibility, longRankFilter, shortRankFilter]);
 
   const renderControls = () => (
     <div className="flex items-center py-4 space-x-4">
       <Input
-        placeholder="Filter across tables..."
+        placeholder="Filter across all columns..."
         value={globalFilter}
         onChange={(event) => setGlobalFilter(event.target.value)}
         className="w-[220px] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
       />
+      <Select value={longRankFilter} onValueChange={setLongRankFilter}>
+        <SelectTrigger className="w-[150px]">
+          <SelectValue placeholder="Long Rank" />
+        </SelectTrigger>
+        <SelectContent>
+          {rankOptions.map((rank) => (
+            <SelectItem key={rank} value={rank}>
+              {rank === "all" ? "All Long Rank" : rank}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select value={shortRankFilter} onValueChange={setShortRankFilter}>
+        <SelectTrigger className="w-[150px]">
+          <SelectValue placeholder="Short Rank" />
+        </SelectTrigger>
+        <SelectContent>
+          {rankOptions.map((rank) => (
+            <SelectItem key={rank} value={rank}>
+              {rank === "all" ? "All Short Rank" : rank}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       <Button
         variant="outline"
-        className="bg-white text-black hover:bg-white hover:text-black"  
-        onClick={() => setGlobalFilter("")}
+        className="bg-white text-black hover:bg-white hover:text-black"
+        onClick={() => {
+          setGlobalFilter("");
+          setLongRankFilter("all");
+          setShortRankFilter("all");
+        }}
       >
-        Clear
+        Clear All
       </Button>
     </div>
   );
 
-  // Return an object with the controls and DataTable component
   return {
     renderControls,
     DataTable

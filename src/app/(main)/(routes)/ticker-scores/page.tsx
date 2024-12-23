@@ -8,34 +8,56 @@ import { Loader } from "@/components/ui";
 
 export default function TickerScoresPage() {
   const [scores, setScores] = useState<IndexScore[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchTickerScores = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/ticker-scores');
-        if (!response.ok) {
-          throw new Error('Failed to fetch ticker scores');
-        }
-        const data = await response.json();
-        setScores(data);
-      } catch (error) {
-        console.error('Error fetching ticker scores:', error);
-      }
-      setLoading(false);
-    };
-
-    fetchTickerScores();
+    fetchStoredTickerScores();
   }, []);
+
+  const fetchStoredTickerScores = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/stored-ticker-scores');
+      if (!response.ok) {
+        throw new Error('Failed to fetch stored ticker scores');
+      }
+      const data = await response.json();
+      setScores(data);
+    } catch (error) {
+      console.error('Error fetching stored ticker scores:', error);
+    }
+    setLoading(false);
+  };
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/ticker-scores');
+      if (!response.ok) {
+        throw new Error('Failed to fetch new ticker scores');
+      }
+      const data = await response.json();
+      setScores(data);
+    } catch (error) {
+      console.error('Error fetching new ticker scores:', error);
+    }
+    setLoading(false);
+  };
+
+  if (loading && scores.length === 0) {
+    return <Loader />;
+  }
 
   return (
     <>
-    {loading && <Loader />}
-    <Header isHeader={true} scores={scores} onSubmit={() => {}}/>
-    <div className="ml-8 ">
-        <TickerScores scores={scores} />
-    </div>
+      <Header isHeader={true} scores={scores} onSubmit={() => {}} />
+      <div className="ml-8">
+        <TickerScores 
+          scores={scores} 
+          onRefresh={handleRefresh}
+          isLoading={loading}
+        />
+      </div>
     </>
   );
 }

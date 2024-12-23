@@ -58,6 +58,7 @@ interface HeaderProps {
   isHeader?: boolean;
   backButtonPath?: string;
   scores?: IndexScore[];
+  initialTicker?: string;
 }
 
 const timePeriods = ["1m", "5m", "15m", "60m", "1d", "1wk", "1mo"];
@@ -66,11 +67,12 @@ export default function Header({
   onSubmit,
   isHeader = false,
   scores = [],
+  initialTicker = 'NVDA'
 }: HeaderProps) {
   const { data: symbols, addSymbol } = useSymbols((state) => state);
   const { theme, TTM, setTTM, setTheme } = useGeneralSetting((state) => state);
   const [technicalData, setTechnicalData] = useState<TickerData>({
-    ticker: "AAPL",
+    ticker: initialTicker,
     timeframe: "1m",
     emaPeriod: 20,
     vwapPeriod: 20,
@@ -82,6 +84,13 @@ export default function Header({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ticker, setTicker] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    setTechnicalData(prev => ({
+      ...prev,
+      ticker: initialTicker
+    }));
+  }, [initialTicker]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -191,15 +200,21 @@ export default function Header({
                       <CommandGroup>
                         {symbols.map((s) => (
                           <CommandItem
-                            key={s.id}
-                            onSelect={() => {
-                              setTechnicalData((prev) => ({
-                                ...prev,
-                                ticker: s.name,
-                              }));
-                              setOpen(false);
-                            }}
-                          >
+                              key={s.id}
+                              onSelect={() => {
+                                const newTicker = s.name;
+                                setTechnicalData((prev) => ({
+                                  ...prev,
+                                  ticker: newTicker,
+                                }));
+                                setOpen(false);
+                                // Trigger submit to update URL
+                                onSubmit({
+                                  ...technicalData,
+                                  ticker: newTicker,
+                                });
+                              }}
+                            >
                             <Check
                               className={cn(
                                 "mr-2 h-4 w-4",

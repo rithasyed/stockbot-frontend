@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const response = await fetch(`${process.env.BACKEND_URL}/ticker-scores?${new Date().getTime()}`,
+    const response = await fetch(`${process.env.BACKEND_URL}/stored-ticker-scores?${new Date().getTime()}`,
     {
       method: "GET",
       headers: {
