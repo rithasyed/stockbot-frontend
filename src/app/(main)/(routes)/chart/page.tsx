@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import PaperTrading from "@/components/paper-trade";
@@ -18,7 +18,7 @@ export interface WatchlistItem {
   name: string;
 }
 
-export default function Home() {
+ function ChartContent() {
   const [chartData, setChartData] = useState<any>(null);
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [open, setOpen] = useState<boolean>(false);
@@ -109,5 +109,13 @@ export default function Home() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <ChartContent />
+    </Suspense>
   );
 }
