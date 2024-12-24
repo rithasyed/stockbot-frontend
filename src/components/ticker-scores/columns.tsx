@@ -42,7 +42,7 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("w_score") as number;
       const squeeze = row.original["w_squeeze"] as boolean;
       return (
-        <div className={`text-center w-full h-full p-2 text-white ${squeeze ? 'bg-red-500' : 'bg-green-500'}`}>
+        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
           {value}
         </div>
       );
@@ -55,7 +55,7 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("five_d_score") as number;
       const squeeze = row.original["five_d_squeeze"] as boolean;
       return (
-        <div className={`text-center w-full h-full p-2 text-white ${squeeze ? 'bg-red-500' : 'bg-green-500'}`}>
+        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
           {value}
         </div>
       );
@@ -68,7 +68,7 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("d_score") as number;
       const squeeze = row.original["d_squeeze"] as boolean;
       return (
-        <div className={`text-center w-full h-full p-2 text-white ${squeeze ? 'bg-red-500' : 'bg-green-500'}`}>
+        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
           {value}
         </div>
       );
@@ -81,7 +81,7 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("one_h_score") as number;
       const squeeze = row.original["one_h_squeeze"] as boolean;
       return (
-        <div className={`text-center w-full h-full p-2 text-white ${squeeze ? 'bg-red-500' : 'bg-green-500'}`}>
+        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
           {value}
         </div>
       );
@@ -94,7 +94,7 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("ninety_m_score") as number;
       const squeeze = row.original["ninety_m_squeeze"] as boolean;
       return (
-        <div className={`text-center w-full h-full p-2 text-white ${squeeze ? 'bg-red-500' : 'bg-green-500'}`}>
+        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
           {value}
         </div>
       );
@@ -107,7 +107,7 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("thirty_m_score") as number;
       const squeeze = row.original["thirty_m_squeeze"] as boolean;
       return (
-        <div className={`text-center w-full h-full p-2 text-white ${squeeze ? 'bg-red-500' : 'bg-green-500'}`}>
+        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
           {value}
         </div>
       );
@@ -120,7 +120,7 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("fifteen_m_score") as number;
       const squeeze = row.original["fifteen_m_squeeze"] as boolean;
       return (
-        <div className={`text-center w-full h-full p-2 text-white ${squeeze ? 'bg-red-500' : 'bg-green-500'}`}>
+        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
           {value}
         </div>
       );
@@ -143,9 +143,9 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("long_score") as number;
       return (
         <div className={
-          value >= 70 ? "font-bold bg-green-600 text-center w-full h-full p-2 text-white" :
-          value >= 40 ? "bg-yellow-500 text-center w-full h-full p-2 text-white" :
-          "bg-red-500 text-center w-full h-full p-2 text-white"
+          value >= 70 ? "font-bold text-green-600 text-center" :
+          value >= 40 ? "text-yellow-500 text-center" :
+          "text-red-500 text-center"
         }>
           {value}
         </div>
@@ -169,9 +169,9 @@ export const columns: ColumnDef<IndexScore>[] = [
       const value = row.getValue("short_score") as number;
       return (
         <div className={
-          value >= 70 ? "font-bold bg-green-600 text-center w-full h-full p-2 text-white" :
-          value >= 40 ? "bg-yellow-500 text-center w-full h-full p-2 text-white" :
-          "bg-red-500 text-center w-full h-full p-2 text-white"
+          value >= 70 ? "font-bold text-green-600 text-center" :
+          value >= 40 ? "text-yellow-500 text-center" :
+          "text-red-500 text-center"
         }>
           {value}
         </div>
@@ -240,7 +240,7 @@ export const columns: ColumnDef<IndexScore>[] = [
           color = "#666666"; // gray
       }
       return (
-        <div className="text-center w-full h-full p-2 text-white" style={{ backgroundColor: color }}>
+        <div className="text-center" style={{ color: color }}>
           {value}
         </div>
       );
@@ -288,7 +288,7 @@ export const columns: ColumnDef<IndexScore>[] = [
           color = "#666666"; // gray
       }
       return (
-        <div className="text-center w-full h-full p-2 text-white" style={{ backgroundColor: color }}>
+        <div className="text-center" style={{ color: color }}>
           {value}
         </div>
       );
