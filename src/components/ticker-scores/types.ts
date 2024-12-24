@@ -1,4 +1,5 @@
 export interface IndexScore {
+  "rank": number;
   "ticker_name" : string;
   "ticker_symbol" : string;
    "w_score": number;

@@ -83,8 +83,6 @@ export function MultiTableDataManager() {
         const columnsToSearch = [
           'ticker_name', 
           'ticker_symbol', 
-          'long_rank', 
-          'short_rank', 
           'trend', 
           'long_score', 
           'short_score',
@@ -100,59 +98,68 @@ export function MultiTableDataManager() {
     });
 
     return (
-      <div className="w-full">
-        <Table className="rounded-md border overflow-x-auto max-h-64 scrollbar-hide">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+      <div className="w-full overflow-hidden border rounded-md">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-gray-100">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead 
+                      key={header.id}
+                      className="px-2 py-3 text-sm font-medium"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="hover:bg-gray-50"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell 
+                        key={cell.id}
+                        className="px-2 py-2 text-sm"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     );
   }, [globalFilter, columnVisibility, longRankFilter, shortRankFilter]);
 
   const renderControls = () => (
-    <div className="flex items-center py-4 space-x-4">
+    <div className="flex flex-wrap items-center gap-4 py-4">
       <Input
         placeholder="Filter across all columns..."
         value={globalFilter}
@@ -161,31 +168,31 @@ export function MultiTableDataManager() {
       />
       <Select value={longRankFilter} onValueChange={setLongRankFilter}>
         <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="Long Rank" />
+          <SelectValue placeholder="Long Trend" />
         </SelectTrigger>
         <SelectContent>
           {rankOptions.map((rank) => (
             <SelectItem key={rank} value={rank}>
-              {rank === "all" ? "All Long Rank" : rank}
+              {rank === "all" ? "All Long Trend" : rank}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
       <Select value={shortRankFilter} onValueChange={setShortRankFilter}>
         <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="Short Rank" />
+          <SelectValue placeholder="Short Trend" />
         </SelectTrigger>
         <SelectContent>
           {rankOptions.map((rank) => (
             <SelectItem key={rank} value={rank}>
-              {rank === "all" ? "All Short Rank" : rank}
+              {rank === "all" ? "All Short Trend" : rank}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
       <Button
         variant="outline"
-        className="bg-white text-black hover:bg-white hover:text-black"
+        className="bg-white text-black hover:bg-gray-50"
         onClick={() => {
           setGlobalFilter("");
           setLongRankFilter("all");

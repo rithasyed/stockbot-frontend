@@ -51,7 +51,7 @@ export default function TickerScoresPage() {
   return (
     <>
       <Header isHeader={true} scores={scores} onSubmit={() => {}} />
-      <div className="ml-8">
+      <div className="ml-4">
         <TickerScores 
           scores={scores} 
           onRefresh={handleRefresh}

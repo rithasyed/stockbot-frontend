@@ -5,7 +5,39 @@ import { Button } from "../ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { IndexScore } from "./types";
 
+const getGradeValue = (grade: string): number => {
+  const gradeValues: { [key: string]: number } = {
+    'A++': 7,
+    'A+': 6,
+    'A': 5,
+    'B': 4,
+    'C': 3,
+    'D': 2,
+    'F': 1,
+  };
+  return gradeValues[grade] || 0;
+};
+
+const addRankToData = (data: IndexScore[]): (IndexScore & { rank: number })[] => {
+  const sortedData = [...data].sort((a, b) => (b.long_score as number) - (a.long_score as number));
+  return sortedData.map((item, index) => ({
+    ...item,
+    rank: index + 1
+  }));
+};
+
 export const columns: ColumnDef<IndexScore>[] = [
+  {
+    accessorKey: "rank",
+    header: "Rank",
+    cell: ({ row }) => {
+      return (
+        <div className="text-center font-medium">
+          {row.original.rank}
+        </div>
+      );
+    }
+  },
   {
     accessorKey: "ticker_name",
     header: "Ticker Name",
@@ -206,10 +238,15 @@ export const columns: ColumnDef<IndexScore>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0 text-center bg-black hover:bg-black"
         >
-           Long Rank
+           Long Trend
           <ArrowUpDown className="ml-2" />
         </Button>
       )
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = getGradeValue(rowA.getValue(columnId));
+      const b = getGradeValue(rowB.getValue(columnId));
+      return a < b ? -1 : a > b ? 1 : 0;
     },
     cell: ({ row }) => {
       const value = row.getValue("long_rank") as string;
@@ -219,25 +256,25 @@ export const columns: ColumnDef<IndexScore>[] = [
           color = "#008000";
           break;
         case "A+":
-          color = "#00CC00"; // light green
+          color = "#00CC00";
           break;
         case "A":
-          color = "#CCCC00"; // yellow
+          color = "#CCCC00";
           break;
         case "B":
-          color = "#FFC080"; // light orange
+          color = "#FFC080";
           break;
         case "C":
-          color = "#FF9900"; // orange
+          color = "#FF9900";
           break;
         case "D":
-          color = "#FF3300"; // dark orange
+          color = "#FF3300";
           break;
         case "F":
-          color = "#CC0000"; // dark red
+          color = "#CC0000";
           break;
         default:
-          color = "#666666"; // gray
+          color = "#666666";
       }
       return (
         <div className="text-center" style={{ color: color }}>
@@ -254,10 +291,15 @@ export const columns: ColumnDef<IndexScore>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0 text-center bg-black hover:bg-black"
         >
-           Short Rank
+           Short Trend
           <ArrowUpDown className="ml-2" />
         </Button>
       )
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = getGradeValue(rowA.getValue(columnId));
+      const b = getGradeValue(rowB.getValue(columnId));
+      return a < b ? -1 : a > b ? 1 : 0;
     },
     cell: ({ row }) => {
       const value = row.getValue("short_rank") as string;
@@ -267,25 +309,25 @@ export const columns: ColumnDef<IndexScore>[] = [
           color = "#008000";
           break;
         case "A+":
-          color = "#00CC00"; // light green
+          color = "#00CC00";
           break;
         case "A":
-          color = "#CCCC00"; // yellow
+          color = "#CCCC00";
           break;
         case "B":
-          color = "#FFC080"; // light orange
+          color = "#FFC080";
           break;
         case "C":
-          color = "#FF9900"; // orange
+          color = "#FF9900";
           break;
         case "D":
-          color = "#FF3300"; // dark orange
+          color = "#FF3300";
           break;
         case "F":
-          color = "#CC0000"; // dark red
+          color = "#CC0000";
           break;
         default:
-          color = "#666666"; // gray
+          color = "#666666";
       }
       return (
         <div className="text-center" style={{ color: color }}>
@@ -326,7 +368,8 @@ export const FirstTable = (scores: IndexScore[]) => {
     'RIVN', 'RTX', 'RBRK', 'AI', 'MU', 'MRK', 'NKE', 'OUST', 'QCOM', 'ROKU', "BIDU",
     'SHOP', 'PSNL', 'ABBV', 'BABA', 'DUK', 'EOG', 'XOM', 'GE', 'NEE', 'PG', 'SBUX', 'SU', 'TJX', 'KO', 'UNP', 'UPS', 'UNH', 'VLO', 'COST', 'Z', 'ZM'
   ];
-  return scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  return addRankToData(filteredData);
 };
 
 export const SecondTable = (scores: IndexScore[]) => {
@@ -334,7 +377,8 @@ export const SecondTable = (scores: IndexScore[]) => {
   const firsttabledesiredSymbols = [
     'QQQ', 'SPY', 'IWM', 'DIA', 'RSP', 'GLD'
   ];
-  return scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  return addRankToData(filteredData);
 };
 
 export const ThirdTable = (scores: IndexScore[]) => {
@@ -342,7 +386,8 @@ export const ThirdTable = (scores: IndexScore[]) => {
   const secondtabledesiredSymbols = [
     'BTC-USD', 'RTY=F', 'YM=F', 'GC=F', 'NQ=F', 'ES', 'TSM'
   ];
-  return scores.filter(score => secondtabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => secondtabledesiredSymbols.includes(score['ticker_symbol']));
+  return addRankToData(filteredData);
 };
 
 export const FourthTable = (scores: IndexScore[]) => {
@@ -350,5 +395,6 @@ export const FourthTable = (scores: IndexScore[]) => {
   const firsttabledesiredSymbols = [
     'XLK', 'SMH', 'XLF', 'XLV', 'XLE', 'XLC', 'IYR', 'ARKK', 'XLU', 'XLB', 'IYT', 'XLI', 'IBB', 'GBTC', 'SLV'
   ];
-  return scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  return addRankToData(filteredData);
 };
