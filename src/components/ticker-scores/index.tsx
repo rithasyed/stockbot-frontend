@@ -46,7 +46,7 @@ const TickerScores: React.FC<TickerScoresProps> = ({ scores, onRefresh, isLoadin
   return (
     <div className="flex flex-col h-full w-full">
       <div className="pt-10 px-4">
-        <div className="font-bold text-2xl mb-6">Ticker Scores</div>
+        <div className="font-bold text-2xl mb-6">Screening</div>
         <div className="flex items-center justify-between mb-6">
           {renderControls()}
           <Button 

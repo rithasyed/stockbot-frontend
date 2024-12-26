@@ -40,8 +40,10 @@ export function MultiTableDataManager() {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [longRankFilter, setLongRankFilter] = React.useState<string>("all");
   const [shortRankFilter, setShortRankFilter] = React.useState<string>("all");
+  const [longScoreFilter, setLongScoreFilter] = React.useState<string>("all");
 
   const rankOptions = ["all", "A++", "A+", "A", "B", "C", "D", "F"];
+  const longScoreOptions = ["all", "top10bull", "top10bear"];
 
   const DataTable = React.useCallback(({ 
     columns, 
@@ -52,12 +54,29 @@ export function MultiTableDataManager() {
     const [rowSelection, setRowSelection] = React.useState({});
 
     const filteredData = React.useMemo(() => {
-      return data.filter(row => {
+      let filtered = data.filter(row => {
         const longRankMatch = longRankFilter === "all" || row.long_rank === longRankFilter;
         const shortRankMatch = shortRankFilter === "all" || row.short_rank === shortRankFilter;
         return longRankMatch && shortRankMatch;
       });
-    }, [data, longRankFilter, shortRankFilter]);
+
+      // Apply long score filter if selected
+      if (longScoreFilter !== "all") {
+        // Sort by long_score
+        const sorted = [...filtered].sort((a, b) => {
+          if (longScoreFilter === "top10bull") {
+            return b.long_score - a.long_score; // Descending for bullish
+          } else {
+            return a.long_score - b.long_score; // Ascending for bearish
+          }
+        });
+        
+        // Take top 10
+        filtered = sorted.slice(0, 10);
+      }
+
+      return filtered;
+    }, [data, longRankFilter, shortRankFilter, longScoreFilter]);
 
     const table = useReactTable({
       data: filteredData,
@@ -156,7 +175,7 @@ export function MultiTableDataManager() {
         </div>
       </div>
     );
-  }, [globalFilter, columnVisibility, longRankFilter, shortRankFilter]);
+  }, [globalFilter, columnVisibility, longRankFilter, shortRankFilter, longScoreFilter]);
 
   const renderControls = () => (
     <div className="flex flex-wrap items-center gap-4 py-4">
@@ -190,6 +209,16 @@ export function MultiTableDataManager() {
           ))}
         </SelectContent>
       </Select>
+      <Select value={longScoreFilter} onValueChange={setLongScoreFilter}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Long Score Filter" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Stocks</SelectItem>
+          <SelectItem value="top10bull">Top 10 Bullish</SelectItem>
+          <SelectItem value="top10bear">Top 10 Bearish</SelectItem>
+        </SelectContent>
+      </Select>
       <Button
         variant="outline"
         className="bg-white text-black hover:bg-gray-50"
@@ -197,6 +226,7 @@ export function MultiTableDataManager() {
           setGlobalFilter("");
           setLongRankFilter("all");
           setShortRankFilter("all");
+          setLongScoreFilter("all");
         }}
       >
         Clear All

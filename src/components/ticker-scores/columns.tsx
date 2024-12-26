@@ -68,13 +68,47 @@ export const columns: ColumnDef<IndexScore>[] = [
     }
   },
   {
+    accessorKey: "current_price",
+    header: ({ column  }) => {
+      return (
+        <Button
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0 text-center bg-black hover:bg-black"
+        >
+           Price(USD)
+          <ArrowUpDown className="ml-2" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return <div className="text-center font-medium">{row.original["current_price"]}</div>;
+    }
+  },
+  {
     accessorKey: "w_score",
     header: "W",
     cell: ({ row }) => {
       const value = row.getValue("w_score") as number;
-      const squeeze = row.original["w_squeeze"] as boolean;
+      const squeeze = row.original["w_squeeze"] as string;
+      let color = '';
+      switch (squeeze) {
+        case 'no squeeze':
+          color = 'text-green-500';
+          break;
+        case 'low squeeze':
+          color = 'text-black';
+          break;
+        case 'mid squeeze':
+          color = 'text-red-500';
+          break;
+        case 'high squeeze':
+          color = 'text-orange-500';
+          break;
+        default:
+          color = 'text-green-500'; 
+      }
       return (
-        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
+        <div className={`text-center ${color}`}>
           {value}
         </div>
       );
@@ -85,9 +119,26 @@ export const columns: ColumnDef<IndexScore>[] = [
     header: "5D",
     cell: ({ row }) => {
       const value = row.getValue("five_d_score") as number;
-      const squeeze = row.original["five_d_squeeze"] as boolean;
+      const squeeze = row.original["five_d_squeeze"] as string;
+      let color = '';
+      switch (squeeze) {
+        case 'no squeeze':
+          color = 'text-green-500';
+          break;
+        case 'low squeeze':
+          color = 'text-black';
+          break;
+        case 'mid squeeze':
+          color = 'text-red-500';
+          break;
+        case 'high squeeze':
+          color = 'text-orange-500';
+          break;
+        default:
+          color = 'text-green-500';
+      }
       return (
-        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
+        <div className={`text-center ${color}`}>
           {value}
         </div>
       );
@@ -98,9 +149,26 @@ export const columns: ColumnDef<IndexScore>[] = [
     header: "1D",
     cell: ({ row }) => {
       const value = row.getValue("d_score") as number;
-      const squeeze = row.original["d_squeeze"] as boolean;
+      const squeeze = row.original["d_squeeze"] as string;
+      let color = '';
+      switch (squeeze) {
+        case 'no squeeze':
+          color = 'text-green-500';
+          break;
+        case 'low squeeze':
+          color = 'text-black';
+          break;
+        case 'mid squeeze':
+          color = 'text-red-500';
+          break;
+        case 'high squeeze':
+          color = 'text-orange-500';
+          break;
+        default:
+          color = 'text-green-500';
+      }
       return (
-        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
+        <div className={`text-center ${color}`}>
           {value}
         </div>
       );
@@ -111,9 +179,26 @@ export const columns: ColumnDef<IndexScore>[] = [
     header: "1H",
     cell: ({ row }) => {
       const value = row.getValue("one_h_score") as number;
-      const squeeze = row.original["one_h_squeeze"] as boolean;
+      const squeeze = row.original["one_h_squeeze"] as string;
+      let color = '';
+      switch (squeeze) {
+        case 'no squeeze':
+          color = 'text-green-500';
+          break;
+        case 'low squeeze':
+          color = 'text-black';
+          break;
+        case 'mid squeeze':
+          color = 'text-red-500';
+          break;
+        case 'high squeeze':
+          color = 'text-orange-500';
+          break;
+        default:
+          color = 'text-green-500';
+      }
       return (
-        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
+        <div className={`text-center ${color}`}>
           {value}
         </div>
       );
@@ -124,9 +209,26 @@ export const columns: ColumnDef<IndexScore>[] = [
     header: "90M",
     cell: ({ row }) => {
       const value = row.getValue("ninety_m_score") as number;
-      const squeeze = row.original["ninety_m_squeeze"] as boolean;
+      const squeeze = row.original["ninety_m_squeeze"] as string;
+      let color = '';
+      switch (squeeze) {
+        case 'no squeeze':
+          color = 'text-green-500';
+          break;
+        case 'low squeeze':
+          color = 'text-black';
+          break;
+        case 'mid squeeze':
+          color = 'text-red-500';
+          break;
+        case 'high squeeze':
+          color = 'text-orange-500';
+          break;
+        default:
+          color = 'text-green-500';
+      }
       return (
-        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
+        <div className={`text-center ${color}`}>
           {value}
         </div>
       );
@@ -137,9 +239,26 @@ export const columns: ColumnDef<IndexScore>[] = [
     header: "30M",
     cell: ({ row }) => {
       const value = row.getValue("thirty_m_score") as number;
-      const squeeze = row.original["thirty_m_squeeze"] as boolean;
+      const squeeze = row.original["thirty_m_squeeze"] as string;
+      let color = '';
+      switch (squeeze) {
+        case 'no squeeze':
+          color = 'text-green-500';
+          break;
+        case 'low squeeze':
+          color = 'text-black';
+          break;
+        case 'mid squeeze':
+          color = 'text-red-500';
+          break;
+        case 'high squeeze':
+          color = 'text-orange-500';
+          break;
+        default:
+          color = 'text-green-500'; 
+      }
       return (
-        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
+        <div className={`text-center ${color}`}>
           {value}
         </div>
       );
@@ -150,9 +269,26 @@ export const columns: ColumnDef<IndexScore>[] = [
     header: "15M",
     cell: ({ row }) => {
       const value = row.getValue("fifteen_m_score") as number;
-      const squeeze = row.original["fifteen_m_squeeze"] as boolean;
+      const squeeze = row.original["fifteen_m_squeeze"] as string;
+      let color = '';
+      switch (squeeze) {
+        case 'no squeeze':
+          color = 'text-green-500';
+          break;
+        case 'low squeeze':
+          color = 'text-black';
+          break;
+        case 'mid squeeze':
+          color = 'text-red-500';
+          break;
+        case 'high squeeze':
+          color = 'text-orange-500';
+          break;
+        default:
+          color = 'text-green-500';
+      }
       return (
-        <div className={`text-center ${squeeze ? 'text-red-500' : 'text-green-500'}`}>
+        <div className={`text-center ${color}`}>
           {value}
         </div>
       );

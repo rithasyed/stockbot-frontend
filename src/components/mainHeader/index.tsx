@@ -75,15 +75,15 @@ export default function Header({
             <Button 
              variant="ghost"
              className="ml-2"
-             onClick={() => router.push("/performance")}>
-                Performance
+             onClick={() => router.push("/ticker-scores")}>
+                Scanner
             </Button>
             <Button 
              variant="ghost"
              className="ml-2"
-             onClick={() => router.push("/ticker-scores")}>
-                Ticker Scores
-            </Button>
+             onClick={() => router.push("/performance")}>
+                Performance
+            </Button> 
             </div>
           </div>
               <div className="flex justify-between items-center">

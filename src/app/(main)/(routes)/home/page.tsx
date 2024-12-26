@@ -17,6 +17,8 @@ import StatisticsTable from "@/components/statistics-table";
 import RecentFinancialTable from "@/components/recentFinancial-table";
 import { StockData } from "@/types/home";
 import Link from 'next/link';
+import StockInsights from "@/components/stock-insights";
+import { IndexScore } from "@/components/ticker-scores/types";
 
 export default function StockTicker() {
   const [selectedStock, setSelectedStock] = useState<string>("NVDA");
@@ -26,24 +28,28 @@ export default function StockTicker() {
   const [availableTickers, setAvailableTickers] = useState<string[]>(["NVDA"]); 
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedTab, setSelectedTab] = useState('overview');
+  const [scores, setScores] = useState<Array<IndexScore>>([]);
 
   useEffect(() => {
     const fetchStockData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/stock-data?ticker=${selectedStock}`);
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch stock data');
-        }
-
-        const data = await response.json();       
-        // console.log('Full Stock Data:', data);
-        // console.log('Financials:', data.financials);
-        setStockData(data);
-
-        if (data.ticker_symbols && data.ticker_symbols.length > 0) {
-          setAvailableTickers(data.ticker_symbols);
+        // Fetch stock data
+        const stockResponse = await fetch(`/api/stock-data?ticker=${selectedStock}`);
+        if (!stockResponse.ok) throw new Error('Failed to fetch stock data');
+        const stockData = await stockResponse.json();
+        
+        // Fetch scores data
+        const scoresResponse = await fetch('/api/stored-ticker-scores');
+        if (!scoresResponse.ok) throw new Error('Failed to fetch scores');
+        const scoresData = await scoresResponse.json();
+        
+        setStockData(stockData);
+        setScores(scoresData);
+        
+        if (stockData.ticker_symbols?.length > 0) {
+          setAvailableTickers(stockData.ticker_symbols);
         }
         
         setError(null);
@@ -74,7 +80,7 @@ export default function StockTicker() {
       <div>
         <Header  ticker_symbols={availableTickers}/>
       </div>
-      <ScrollArea className="w-full h-[670px]">
+      <ScrollArea className="w-full h-full">
       <div className="mt-4 p-10">
         <div className="absolute top-4 right-4 mt-4 mr-4">
         <Link 
@@ -134,12 +140,19 @@ export default function StockTicker() {
         </div>
 
         <div className="flex gap-4 ml-8">
-          <Button
+        <Button
             variant="ghost"
             className={`text-lg font-semibold hover:bg-white ${selectedTab === 'overview' ? 'selected-tab' : ''}`}
             onClick={() => setSelectedTab('overview')}
           >
             Overview
+          </Button>
+          <Button
+            variant="ghost"
+            className={`text-lg font-semibold hover:bg-white ${selectedTab === 'insights' ? 'selected-tab' : ''}`}
+            onClick={() => setSelectedTab('insights')}
+          >
+            Insights
           </Button>
           <Button
             variant="ghost"
@@ -310,6 +323,14 @@ export default function StockTicker() {
       {selectedTab === 'bot' && (
         <div></div>
             )}
+      {selectedTab === 'insights' && (
+          <div>
+            <StockInsights 
+              selectedStock={selectedStock} 
+              scores={scores}
+            />
+          </div>
+        )}
       <ScrollBar orientation="vertical" />
       </ScrollArea>
     </>
