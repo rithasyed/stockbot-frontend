@@ -57,11 +57,6 @@ const StockAnalysisSection: React.FC<StockAnalysisSectionProps> = ({ selectedSto
         }
 
         const data = await response.json();
-        
-        // Validate the data structure
-        // if (!data || !data.analysis || !data.total_score || !data.rank) {
-        //   throw new Error('Invalid analysis data received');
-        // }
 
         setAnalysisData(data as AnalysisData);
       } catch (err) {
