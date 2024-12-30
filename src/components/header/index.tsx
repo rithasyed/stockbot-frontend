@@ -59,6 +59,7 @@ interface HeaderProps {
   backButtonPath?: string;
   scores?: IndexScore[];
   initialTicker?: string;
+  isPopChart?: boolean;
 }
 
 const timePeriods = ["1m", "5m", "15m", "60m", "1d", "1wk", "1mo"];
@@ -67,7 +68,8 @@ export default function Header({
   onSubmit,
   isHeader = false,
   scores = [],
-  initialTicker = 'NVDA'
+  initialTicker = 'NVDA',
+  isPopChart = true
 }: HeaderProps) {
   const { data: symbols, addSymbol } = useSymbols((state) => state);
   const { theme, TTM, setTTM, setTheme } = useGeneralSetting((state) => state);
@@ -395,8 +397,8 @@ export default function Header({
               />
             )} */}
           </div>
-
-          <div className="flex items-center align-middle gap-1">
+          {isPopChart && (
+            <div className="flex items-center align-middle gap-1">
             {isHeader && (
               <div className="mr-4">
                 <Button onClick={handleDownload}>
@@ -409,6 +411,7 @@ export default function Header({
               <UserButton signInUrl="/signin" />
             </div>
           </div>
+          )}
         </div>
       </div>
     </header>

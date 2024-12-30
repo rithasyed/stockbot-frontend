@@ -16,7 +16,7 @@ export function Sidebar({ onOpenScreen, theme, setOpen, open }: SidebarProps) {
   };   
 
   return (     
-    <div className="w-16 h-screen text-white flex flex-col items-center py-4">       
+    <div className="w-14 h-screen text-white flex flex-col items-center py-4">       
       <Button         
         variant="outline"         
         size="icon"         
@@ -28,7 +28,7 @@ export function Sidebar({ onOpenScreen, theme, setOpen, open }: SidebarProps) {
       </Button>       
       <Button         
         variant="outline"         
-        size="icon"         
+        size="icon"        
         onClick={() => handleClick("backtesting")}         
         className="mt-4"       
       >         

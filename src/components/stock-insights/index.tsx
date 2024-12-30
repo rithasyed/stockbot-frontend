@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { IndexScore } from '../ticker-scores/types';
+import StockAnalysisSection from '../stock-analysis';
 
 const StockInsights: React.FC<{ selectedStock: string; scores: IndexScore[] }> = ({ selectedStock, scores }) => {
   const getScoreColor = (score: number): string => {
@@ -44,8 +45,11 @@ const StockInsights: React.FC<{ selectedStock: string; scores: IndexScore[] }> =
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-      {/* Scores Overview Card */}
+    <>
+    {/* <div className='m-6'>
+      <StockAnalysisSection selectedStock={selectedStock} />
+    </div> */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <Card>
         <CardHeader>
           <CardTitle>Score Insight</CardTitle>
@@ -155,7 +159,7 @@ const StockInsights: React.FC<{ selectedStock: string; scores: IndexScore[] }> =
           </div>
         </CardContent>
       </Card>
-    </div>
+    </div></>
   );
 };
 

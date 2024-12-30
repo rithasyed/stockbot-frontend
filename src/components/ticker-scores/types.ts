@@ -23,4 +23,5 @@ export interface IndexScore {
   "short_rank": string;
   "score_change_trend": string;
   "current_price": number;
+  "sector": string;
 }

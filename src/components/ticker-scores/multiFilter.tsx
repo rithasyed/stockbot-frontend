@@ -192,7 +192,7 @@ export function MultiTableDataManager() {
         <SelectContent>
           {rankOptions.map((rank) => (
             <SelectItem key={rank} value={rank}>
-              {rank === "all" ? "All Long Trend" : rank}
+              {rank === "all" ? "All Long Term" : rank}
             </SelectItem>
           ))}
         </SelectContent>
@@ -204,7 +204,7 @@ export function MultiTableDataManager() {
         <SelectContent>
           {rankOptions.map((rank) => (
             <SelectItem key={rank} value={rank}>
-              {rank === "all" ? "All Short Trend" : rank}
+              {rank === "all" ? "All Short Term" : rank}
             </SelectItem>
           ))}
         </SelectContent>

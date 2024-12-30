@@ -19,6 +19,7 @@ import { StockData } from "@/types/home";
 import Link from 'next/link';
 import StockInsights from "@/components/stock-insights";
 import { IndexScore } from "@/components/ticker-scores/types";
+import StockAnalysisSection from "@/components/stock-analysis";
 
 export default function StockTicker() {
   const [selectedStock, setSelectedStock] = useState<string>("NVDA");
@@ -324,7 +325,8 @@ export default function StockTicker() {
         <div></div>
             )}
       {selectedTab === 'insights' && (
-          <div>
+          <div className="m-6">
+            <StockAnalysisSection selectedStock={selectedStock} />
             <StockInsights 
               selectedStock={selectedStock} 
               scores={scores}

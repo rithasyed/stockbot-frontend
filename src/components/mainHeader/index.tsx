@@ -76,7 +76,7 @@ export default function Header({
              variant="ghost"
              className="ml-2"
              onClick={() => router.push("/ticker-scores")}>
-                Scanner
+                Screener
             </Button>
             <Button 
              variant="ghost"

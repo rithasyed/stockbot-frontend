@@ -2,8 +2,19 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { IndexScore } from "./types";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import dynamic from "next/dynamic";
+import { PopupChart } from "../popupChart";
+
 
 const getGradeValue = (grade: string): number => {
   const gradeValues: { [key: string]: number } = {
@@ -52,19 +63,38 @@ export const columns: ColumnDef<IndexScore>[] = [
   },
   {
     accessorKey: "ticker_symbol",
-    header: ({ column  }) => {
+    header: ({ column }) => {
       return (
         <Button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0 text-center bg-black hover:bg-black"
         >
-           Symbol
+          Symbol
           <ArrowUpDown className="ml-2" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      return <div className="text-center font-medium">{row.original["ticker_symbol"]}</div>;
+      const symbol = row.original["ticker_symbol"];
+      return (
+        <div className="rounded-lg">
+          <Dialog >
+            <DialogTrigger asChild>
+              <Badge 
+                variant="outline" 
+                className="cursor-pointer hover:bg-gray-100 transition-colors"
+              >
+                {symbol}
+              </Badge>
+            </DialogTrigger>
+            <DialogContent className="max-w-[85vw] h-[85vh] p-0 rounded-lg">
+              <div className="w-full h-full overflow-hidden rounded-lg">
+                <PopupChart symbol={symbol} />
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      );
     }
   },
   {
@@ -81,7 +111,24 @@ export const columns: ColumnDef<IndexScore>[] = [
       )
     },
     cell: ({ row }) => {
-      return <div className="text-center font-medium">{row.original["current_price"]}</div>;
+      return <div className="text-center font-medium">{row.original["current_price"].toFixed(2)}</div>;
+    }
+  },
+  {
+    accessorKey: "sector",
+    header: ({ column  }) => {
+      return (
+        <Button
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0 text-center bg-black hover:bg-black"
+        >
+           Sector
+          <ArrowUpDown className="ml-2" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return <div className="text-center font-medium">{row.original["sector"]}</div>;
     }
   },
   {
@@ -374,7 +421,7 @@ export const columns: ColumnDef<IndexScore>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0 text-center bg-black hover:bg-black"
         >
-           Long Trend
+           Long Term 
           <ArrowUpDown className="ml-2" />
         </Button>
       )
@@ -427,7 +474,7 @@ export const columns: ColumnDef<IndexScore>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0 text-center bg-black hover:bg-black"
         >
-           Short Trend
+           Short Term
           <ArrowUpDown className="ml-2" />
         </Button>
       )
@@ -480,18 +527,38 @@ export const columns: ColumnDef<IndexScore>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0 text-center bg-black hover:bg-black"
         >
-           Overall Trend
+          Overall Trend
           <ArrowUpDown className="ml-2" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const value = row.original["score_change_trend"];
+      const valueString = row.original["score_change_trend"];
+      
+      // Check for empty string, null, or undefined
+      if (valueString === "" || valueString === null || valueString === undefined) {
+        return <div className="text-center"></div>;
+      }
+  
+      const value = parseFloat(valueString);
+      
+      // Check if parseFloat resulted in a valid number
+      if (isNaN(value)) {
+        return <div className="text-center"></div>;
+      }
+  
+      const isPositive = value > 0;
+      const isNegative = value < 0;
+  
       return (
-        <div className="text-center font-medium">{value}</div>
+        <div className="text-center font-medium flex items-center justify-center">
+          {value}
+          {isPositive && <ArrowUp className="ml-2 text-green-500" />}
+          {isNegative && <ArrowDown className="ml-2 text-red-500" />}
+        </div>
       );
     }
-  },
+  }
   
 ];
 export const FirstTable = (scores: IndexScore[]) => {
