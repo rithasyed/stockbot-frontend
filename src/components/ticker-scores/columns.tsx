@@ -2,18 +2,16 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
 import { IndexScore } from "./types";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import dynamic from "next/dynamic";
 import { PopupChart } from "../popupChart";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 
 
 const getGradeValue = (grade: string): number => {
@@ -87,7 +85,7 @@ export const columns: ColumnDef<IndexScore>[] = [
                 {symbol}
               </Badge>
             </DialogTrigger>
-            <DialogContent className="max-w-[85vw] h-[85vh] p-0 rounded-lg">
+            <DialogContent className="max-w-[95vw] h-[95vh] p-0 rounded-lg">
               <div className="w-full h-full overflow-hidden rounded-lg">
                 <PopupChart symbol={symbol} />
               </div>
@@ -558,46 +556,84 @@ export const columns: ColumnDef<IndexScore>[] = [
         </div>
       );
     }
+  },
+  {
+    id: "actions",
+    header: "Action",
+    cell: ({ row }) => {
+      const handleDelete = async () => {
+        try {
+          const response = await fetch(`/api/soft-delete?ticker=${row.original.ticker_symbol}`, {
+            method: 'DELETE',
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to delete ticker');
+          }
+          window.location.reload();
+        } catch (error) {
+          console.error('Error deleting ticker:', error);
+        }
+      };
+  
+      return (
+        <div className="text-center">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-500"
+              >
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently remove {row.original.ticker_symbol} from your watchlist.
+                  Please confirm that you want to proceed with this action.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  className="bg-red-500 hover:bg-red-600"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      );
+    },
   }
   
 ];
 export const FirstTable = (scores: IndexScore[]) => {
-  //stocks
-  const firsttabledesiredSymbols = [
-    'AMZN', 'PLTR', 'NFLX', 'META', 'TSLA', 'WMT', 'CRM', 'ORCL', 'AAPL', 'C', 'MSFT', 'PTON', 'JPM', 'UAL', 
-    'GOOG', 'LMND', 'NVDA', 'WFC', 'OKTA', 'SMCI', 'AMD', 'INTC',"DOCU","PEP","TGT","BAC",
-    'GOOGL', 'AVGO', 'BA', 'BKNG', 'SQ', 'CAT', 'CVX', 'CMG', 'NET', 'CRSP', "LMT", "LRCX","LULU","MCD",
-    'DDOG', 'DE', 'TSM', 'LLY', 'FSLR', 'GTLB', 'GS', 'SOFI', 'HD', 'IBM', "SO","MP",
-    'RIVN', 'RTX', 'RBRK', 'AI', 'MU', 'MRK', 'NKE', 'OUST', 'QCOM', 'ROKU', "BIDU",
-    'SHOP', 'PSNL', 'ABBV', 'BABA', 'DUK', 'EOG', 'XOM', 'GE', 'NEE', 'PG', 'SBUX', 'SU', 'TJX', 'KO', 'UNP', 'UPS', 'UNH', 'VLO', 'COST', 'Z', 'ZM'
-  ];
-  const filteredData = scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => score.category_id === 1);
   return addRankToData(filteredData);
 };
 
 export const SecondTable = (scores: IndexScore[]) => {
-  //indexes
-  const firsttabledesiredSymbols = [
-    'QQQ', 'SPY', 'IWM', 'DIA', 'RSP', 'GLD'
-  ];
-  const filteredData = scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => score.category_id === 2);
   return addRankToData(filteredData);
 };
 
 export const ThirdTable = (scores: IndexScore[]) => {
-  //futures
-  const secondtabledesiredSymbols = [
-    'BTC-USD', 'RTY=F', 'YM=F', 'GC=F', 'NQ=F', 'ES', 'TSM'
-  ];
-  const filteredData = scores.filter(score => secondtabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => score.category_id === 3);
   return addRankToData(filteredData);
 };
 
 export const FourthTable = (scores: IndexScore[]) => {
-  //sectors or etfs
-  const firsttabledesiredSymbols = [
-    'XLK', 'SMH', 'XLF', 'XLV', 'XLE', 'XLC', 'IYR', 'ARKK', 'XLU', 'XLB', 'IYT', 'XLI', 'IBB', 'GBTC', 'SLV'
-  ];
-  const filteredData = scores.filter(score => firsttabledesiredSymbols.includes(score['ticker_symbol']));
+  const filteredData = scores.filter(score => score.category_id === 4);
+  return addRankToData(filteredData);
+};
+
+export const FifthTable = (scores: IndexScore[]) => {
+  const filteredData = scores.filter(score => score.category_id === 5);
   return addRankToData(filteredData);
 };

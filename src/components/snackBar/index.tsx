@@ -10,7 +10,7 @@ interface SnackbarProps {
 interface SnackbarContainerProps {
   messages: string[];
   removeMessage: (index: number) => void;
-  soundUrl?: string; 
+  soundUrl?: string; // New prop for custom sound URL
 }
 
 const Snackbar: React.FC<SnackbarProps> = ({

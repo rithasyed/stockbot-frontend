@@ -46,9 +46,6 @@ const StockInsights: React.FC<{ selectedStock: string; scores: IndexScore[] }> =
 
   return (
     <>
-    {/* <div className='m-6'>
-      <StockAnalysisSection selectedStock={selectedStock} />
-    </div> */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <Card>
         <CardHeader>

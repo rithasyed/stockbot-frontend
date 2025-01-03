@@ -10,22 +10,39 @@ import {
 
 interface StatisticsTableProps {
   info: {
-    trailingPE: number;
-    trailingEps: number;
-    priceToBook: number;
-    priceToSalesTrailing12Months: number;
+    trailingPE?: number | null;
+    trailingEps?: number | null;
+    priceToBook?: number | null;
+    priceToSalesTrailing12Months?: number | null;
   };
 }
 
 const StatisticsTable: React.FC<StatisticsTableProps> = ({ info }) => {
   if (!info) return null;
 
+  // Check if any of the required statistics are available
+  const hasAnyStats = [
+    info.trailingPE,
+    info.trailingEps,
+    info.priceToSalesTrailing12Months,
+    info.priceToBook
+  ].some(value => value != null);
+
+  if (!hasAnyStats) return null;
+
+  const formatValue = (value: number | null | undefined) => {
+    if (value == null) return 'N/A';
+    return isFinite(value) ? value.toFixed(4) : 'N/A';
+  };
+
   const statistics = [
     { metric: "PE Ratio (TTM)", value: info.trailingPE },
     { metric: "EPS (TTM)", value: info.trailingEps },
     { metric: "Price/Sales (TTM)", value: info.priceToSalesTrailing12Months },
     { metric: "Price/Book (MRQ)", value: info.priceToBook },
-  ];
+  ].filter(stat => stat.value != null);
+
+  if (statistics.length === 0) return null;
 
   return (
     <div className="m-6 ml-10">
@@ -44,7 +61,7 @@ const StatisticsTable: React.FC<StatisticsTableProps> = ({ info }) => {
                   {stat.metric}
                 </TableCell>
                 <TableCell className="text-center">
-                  {stat.value.toFixed(4)}
+                  {formatValue(stat.value)}
                 </TableCell>
               </TableRow>
             ))}

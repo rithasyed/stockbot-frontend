@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function POST() {
   try {
     const response = await fetch(`${process.env.BACKEND_URL}/ticker-scores?${new Date().getTime()}`,
     {
-      method: "GET",
+      method: "POST",
       headers: {
         "Cache-Control": "no-cache",
       },

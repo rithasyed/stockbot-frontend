@@ -22,7 +22,8 @@ export default function TickerScoresPage() {
         throw new Error('Failed to fetch stored ticker scores');
       }
       const data = await response.json();
-      setScores(data);
+      const filteredData = data.filter((score: IndexScore) => !score.is_deleted);
+      setScores(filteredData);
     } catch (error) {
       console.error('Error fetching stored ticker scores:', error);
     }
@@ -32,16 +33,22 @@ export default function TickerScoresPage() {
   const handleRefresh = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/ticker-scores');
+      const response = await fetch('/api/ticker-scores', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}), 
+      });
+      
       if (!response.ok) {
         throw new Error('Failed to fetch new ticker scores');
       }
-      const data = await response.json();
-      setScores(data);
+      await fetchStoredTickerScores();
     } catch (error) {
-      console.error('Error fetching new ticker scores:', error);
+      console.error('Error in refresh process:', error);
+      setLoading(false); 
     }
-    setLoading(false);
   };
 
   if (loading && scores.length === 0) {
@@ -55,6 +62,7 @@ export default function TickerScoresPage() {
         <TickerScores 
           scores={scores} 
           onRefresh={handleRefresh}
+          onAdd={fetchStoredTickerScores}
           isLoading={loading}
         />
       </div>

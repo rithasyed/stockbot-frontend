@@ -24,4 +24,6 @@ export interface IndexScore {
   "score_change_trend": string;
   "current_price": number;
   "sector": string;
+  "category_id": number;
+  "is_deleted": boolean
 }

@@ -68,12 +68,12 @@ export const PopupChart = ({ symbol }: PopupChartProps) => {
           onSubmit={onSubmit}
           initialTicker={symbol}
           isPopChart={false}
-          isHeader={true}
+          isHeader={false}
         />
       </div>
 
       <div className="flex flex-1 gap-2 p-2 min-h-0">
-        <div className={`flex h-full rounded ${
+        {/* <div className={`flex h-full rounded ${
           theme === "light" ? "bg-white" : "bg-black"
         }`}>
           <div className="w-12">
@@ -90,7 +90,7 @@ export const PopupChart = ({ symbol }: PopupChartProps) => {
               {activeScreen === "backtesting" && <BackTesting />}
             </div>
           )}
-        </div>
+        </div> */}
         
         <div className={`flex-1 rounded overflow-hidden ${
           theme === "light" ? "bg-white" : "bg-black"
