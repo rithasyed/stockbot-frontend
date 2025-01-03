@@ -1,4 +1,3 @@
-// app/api/soft-delete/route.ts
 import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request) {
